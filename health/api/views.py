@@ -42,6 +42,12 @@ def login_user(request):
             "error": 'Invalid credentials'
         }, status=status.HTTP_400_BAD_REQUEST)
     else:
+        verified=OtpCode.objects.filter(user=user,verified=True).exists()
+        if not verified:
+            return Response({
+                "status": 400,
+                "error": 'Please verify your account first'
+            }, status=status.HTTP_400_BAD_REQUEST)
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
@@ -77,3 +83,18 @@ def password_reset_confirm(request, token):
     token_obj.delete()
     
     return Response({"message": "Password has been reset"}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def otpVerification(request):
+    data=request.data
+    otp=data['otp']
+    otp_obj=OtpCode.objects.filter(otp=otp).exists()
+    if otp_obj:
+        otp_obj=OtpCode.objects.get(otp=otp)
+        otp_obj.verified=True
+        otp_obj.save()
+        return Response({"message":"Account verified successfuly"},status.HTTP_200_OK)
+    else:
+        return Response({"message":"Invalid OTP"},status=status.HTTP_400_BAD_REQUEST)
+    

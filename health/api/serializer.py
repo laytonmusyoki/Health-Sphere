@@ -4,6 +4,7 @@ from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import *
+import random
 
 
 from rest_framework import serializers
@@ -32,6 +33,16 @@ class Register(serializers.Serializer):
         user=User.objects.create(username=validated_data['username'],email=validated_data['email'])
         user.set_password(validated_data['password'])
         user.save()
+        otp=random.randint(0000,9999)
+        email=validated_data['email']
+        OtpCode.objects.create(user=user,otp=otp)
+        send_mail(
+            'One-Time-Password',
+            f'Your OTP is {otp}',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
         return validated_data
 
 
