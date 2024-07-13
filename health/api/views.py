@@ -52,3 +52,28 @@ def login_user(request):
             'refresh': refresh_token
         }, status=status.HTTP_200_OK)
     
+
+@api_view(['POST'])
+def password_reset_request(request):
+    if request.method == 'POST':
+        serializer = PasswordResetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Password reset link sent"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def password_reset_confirm(request, token):
+    try:
+        token_obj = Token.objects.get(token=token)
+    except Token.DoesNotExist:
+        return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = token_obj.user
+    user.set_password(request.data['password'])
+    user.save()
+    
+    # Optionally, delete the token after use
+    token_obj.delete()
+    
+    return Response({"message": "Password has been reset"}, status=status.HTTP_200_OK)
