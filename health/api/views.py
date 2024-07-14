@@ -35,7 +35,7 @@ def login_user(request):
         }, status=status.HTTP_400_BAD_REQUEST)
     
     user = authenticate(username=serializer.data['username'], password=serializer.data['password'])
-    
+
     if not user:
         return Response({
             "status": 400,
@@ -98,3 +98,42 @@ def otpVerification(request):
     else:
         return Response({"message":"Invalid OTP"},status=status.HTTP_400_BAD_REQUEST)
     
+
+
+
+
+@api_view(['POST'])
+def addWorkouts(request):
+    data=request.data
+    serializer=WorkoutsSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message":"Workout added successfully"},status.HTTP_201_CREATED)
+    else:
+        return Response({"message":serializer.errors},status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+def getWorkouts(request):
+    workouts=Workouts.objects.all()
+    serializer=WorkoutsSerializer(workouts,many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def addFeeds(request):
+    data=request.data
+    serializer=FeedsSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message":"Feed added successfully"},status.HTTP_201_CREATED)
+    else:
+        return Response({"message":serializer.errors},status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(['GET'])
+def getFeeds(request):
+    feeds=Feeds.objects.all()
+    serializer=FeedsSerializer(feeds,many=True)
+    return Response({"feeds":serializer.data},status=status.HTTP_200_OK)

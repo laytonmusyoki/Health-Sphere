@@ -20,3 +20,25 @@ class OtpCode(models.Model):
 
     def _str_(self):
         return f"OTP for {self.user.username}"
+    
+
+
+class Workouts(models.Model):
+    vedio=models.FileField(upload_to="workouts")
+    title=models.CharField(max_length=100)
+    description=models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.title
+    
+
+
+class Feeds(models.Model):
+    image=models.ImageField(upload_to='feeds')
+    title=models.CharField(max_length=200)
+    sub_title=models.CharField(max_length=200)
+    description=models.CharField(max_length=1000)
+
+    def __str__(self) -> str:
+        return self.title
+

@@ -17,5 +17,9 @@ urlpatterns = [
     path('otp-verify/',otpVerification,name="otp-otpVerification"),
     path('password-reset/', password_reset_request, name='password-reset'),
     path('password-reset-confirm/<str:token>/', password_reset_confirm, name='password-reset-confirm'),
+    path('workouts/',getWorkouts,name='workouts'),
+    path('addWorkout/',addWorkouts,name='addWorkouts'),
+    path('feeds/',getFeeds,name='feeds'),
+    path('addFeeds/',addFeeds,name='addFeeds'),
     
 ]

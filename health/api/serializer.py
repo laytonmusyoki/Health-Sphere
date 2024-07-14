@@ -23,7 +23,6 @@ class Register(serializers.Serializer):
         if data['username']:
             if User.objects.filter(username=data['username']).exists():
                 raise serializers.ValidationError("Username is already taken")
-        
         if data['email']:
             if User.objects.filter(email=data['email']).exists():
                 raise serializers.ValidationError("Email already exists")
@@ -74,3 +73,16 @@ class PasswordResetSerializer(serializers.Serializer):
             [email],
             fail_silently=False,
         )
+
+
+class WorkoutsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Workouts
+        fields="__all__"
+
+
+
+class FeedsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Feeds
+        fields="__all__"
