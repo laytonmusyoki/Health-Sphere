@@ -21,5 +21,6 @@ urlpatterns = [
     path('addWorkout/',addWorkouts,name='addWorkouts'),
     path('feeds/',getFeeds,name='feeds'),
     path('addFeeds/',addFeeds,name='addFeeds'),
+    path('signout/',signout,name='signout'),
     
 ]

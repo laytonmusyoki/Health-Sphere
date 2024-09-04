@@ -137,3 +137,14 @@ def getFeeds(request):
     feeds=Feeds.objects.all()
     serializer=FeedsSerializer(feeds,many=True)
     return Response({"feeds":serializer.data},status=status.HTTP_200_OK)
+
+
+
+# logout
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def signout(request):
+    refresh_token = request.data['refresh']
+    token = RefreshToken(refresh_token)
+    token.blacklist()
+    return Response({"message": "You have been logged out"}, status=status.HTTP_200_OK)
